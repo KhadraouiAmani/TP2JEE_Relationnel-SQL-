@@ -1,4 +1,4 @@
-package com.bibliotech.bibliotechproject.config;
+package com.example.tp2jeepart2.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
