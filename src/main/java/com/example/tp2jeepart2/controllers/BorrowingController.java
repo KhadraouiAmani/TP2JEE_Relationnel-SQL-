@@ -22,4 +22,9 @@ public class BorrowingController {
     public List<Borrowing> getUserBorrowings(@PathVariable Long userId) {
         return borrowingService.getMemberBorrowings(userId);
     }
+
+    @PostMapping("/return/{id}")
+    public void returnBook(@PathVariable Long id) {
+        borrowingService.returnBook(id);
+    }
 }
