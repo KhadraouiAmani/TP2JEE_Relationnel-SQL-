@@ -51,6 +51,31 @@ public class BorrowingService {
         return borrowingRepository.save(borrowing);
     }
 
+    @Transactional // Very important for atomicity!
+    public void returnBook(Long borrowingId) {
+        // 1. Find the borrowing record
+        Borrowing borrowing = borrowingRepository.findById(borrowingId)
+                .orElseThrow(() -> new RuntimeException("Error: Borrowing record not found"));
+
+        // 2. Check if it's already returned (to avoid double stock increase)
+        if (borrowing.getStatus() == BorrowingStatus.RETURNED) {
+            throw new RuntimeException("Error: This book was already returned.");
+        }
+
+        // 3. Change the status and the date
+        borrowing.setStatus(BorrowingStatus.RETURNED);
+        borrowing.setReturnDate(LocalDate.now());
+
+        // 4. Update the book stock (Circular Logic)
+        // Since it's a relation, borrowing already "knows" which book it is!
+        Book book = borrowing.getBook();
+        book.setStockDisponible(book.getStockDisponible() + 1);
+
+        // 5. Save everything
+        bookRepository.save(book);
+        borrowingRepository.save(borrowing);
+    }
+
     public List<Borrowing> getMemberBorrowings(Long userId) {
         return borrowingRepository.findByUserId(userId);
     }
