@@ -25,7 +25,7 @@ public class Book {
     @CreatedDate
     private LocalDateTime createdAt;
 
-    @ManyToOne // Un auteur peut avoir plusieurs livres
+    @ManyToOne
     @JoinColumn(name = "author_id")
     private Author author;
 
